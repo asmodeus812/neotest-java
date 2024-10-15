@@ -10,6 +10,7 @@ local default_config = {
 	),
 	incremental_build = true,
 	default_version = DEFAULT_VERSION,
+    java_runtimes = {}
 }
 
 ---@type neotest-java.Context
@@ -37,7 +38,7 @@ return {
 ---@field junit_jar string
 ---@field incremental_build boolean
 ---@field default_version string
-
+---@field java_runtimes table<string,string>
 ---@class neotest-java.Context
 ---@field config neotest-java.ConfigOpts
 ---@field root string|nil
