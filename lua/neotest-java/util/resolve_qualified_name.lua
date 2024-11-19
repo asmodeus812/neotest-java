@@ -40,7 +40,9 @@ local function resolve_qualified_name(filename)
     ((class_declaration (identifier) @target))
   ]]
 
-	local package_line = find_in_text(package_query, content)[1]
+	local package_lines = find_in_text(package_query, content)
+
+	local package_line = (package_lines and package_lines[1]) and (package_lines[1] .. ".") or ""
 	local names = find_in_text(class_name_query, content)
 
 	-- as there can be different class names
