@@ -56,6 +56,7 @@ local function resolve_qualified_name(filename)
 			end
 		end
 	end
+	assert(name, "test class name not found") -- should not happen
 
 	return name and (package_line .. "." .. name) or nil
 end
