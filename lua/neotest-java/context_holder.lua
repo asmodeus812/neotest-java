@@ -8,9 +8,10 @@ local default_config = {
 	junit_jar = compatible_path(
 		("%s/neotest-java/junit-platform-console-standalone-%s.jar"):format(vim.fn.stdpath("data"), DEFAULT_VERSION)
 	),
-	incremental_build = true,
 	default_version = DEFAULT_VERSION,
-    java_runtimes = {}
+	incremental_build = true,
+	build_target = "project",
+	java_runtimes = {},
 }
 
 ---@type neotest-java.Context
@@ -36,6 +37,7 @@ return {
 
 ---@class neotest-java.ConfigOpts
 ---@field junit_jar string
+---@field build_target string
 ---@field incremental_build boolean
 ---@field default_version string
 ---@field java_runtimes table<string,string>
