@@ -10,8 +10,8 @@ M.get_java_home = runtime
 
 M.get_classpath = classpaths
 
-M.get_classpath_file_argument = function(report_dir, additional_classpath_entries)
-	local classpath = table.concat(M.get_classpath(additional_classpath_entries), ":")
+M.get_classpath_file_argument = function(root_directory, report_dir, additional_classpath_entries)
+	local classpath = table.concat(M.get_classpath(root_directory, additional_classpath_entries), ":")
 	local temp_file = compatible_path(report_dir .. "/.cp")
 	write_file(temp_file, ("-cp %s"):format(classpath))
 

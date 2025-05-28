@@ -34,12 +34,19 @@ function SpecBuilder.build_spec(args, project_type, config)
 	local absolute_path = position.path
 	local project = assert(Project.from_root_dir(root), "project not detected correctly")
 	local modules = project:get_modules()
-
-	-- make sure we are in root_dir
 	nio.fn.chdir(root)
 
-	-- make sure outputDir is created to operate in it
-	local output_dir = build_tools.get(project_type).get_output_dir()
+	local module_dirs = vim
+		.iter(modules)
+		:map(function(mod)
+			return mod.base_dir
+		end)
+		:totable()
+	local base_dir = assert(find_module_by_filepath(module_dirs, absolute_path), "module base_dir not found")
+	command:basedir(base_dir)
+
+	-- CREATE REPORTS make sure outputDir is created to operate in it
+	local output_dir = build_tools.get(project_type).get_output_dir(base_dir)
 	local output_dir_parent = compatible_path(path:new(output_dir):parent().filename)
 
 	vim.uv.fs_mkdir(output_dir_parent, 493)
@@ -48,15 +55,6 @@ function SpecBuilder.build_spec(args, project_type, config)
 	-- JUNIT REPORT DIRECTORY
 	local reports_dir = compatible_path(string.format("%s/junit-reports/%s", output_dir, nio.fn.strftime("%d%m%y%H%M%S")))
 	command:reports_dir(compatible_path(reports_dir))
-
-	local module_dirs = vim
-		.iter(modules)
-		:map(function(mod)
-			return mod.base_dir
-		end)
-		:totable()
-	local base_dir = assert(find_module_by_filepath(module_dirs, position.path), "module base_dir not found")
-	command:basedir(base_dir)
 
 	-- TEST SELECTORS
 	if position.type == "dir" then
@@ -95,7 +93,7 @@ function SpecBuilder.build_spec(args, project_type, config)
 		search_pattern = "test/resources$",
 	})
 
-	local classpath_file_arg = _jdtls.get_classpath_file_argument(output_dir, resources)
+	local classpath_file_arg = _jdtls.get_classpath_file_argument(base_dir, output_dir, resources)
 	command:classpath_file_arg(classpath_file_arg)
 
 	-- DAP STRATEGY
@@ -128,7 +126,7 @@ function SpecBuilder.build_spec(args, project_type, config)
 	logger.info("junit command: ", command:build_to_string())
 	return {
 		command = command:build_to_string(),
-		cwd = root,
+		cwd = base_dir,
 		symbol = position.name,
 		context = { reports_dir = reports_dir },
 	}

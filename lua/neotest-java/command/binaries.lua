@@ -4,8 +4,8 @@ local compatible_path = require("neotest-java.util.compatible_path")
 
 local binaries = {
 
-	java = function()
-		local ok, jdtls_java_home = pcall(jdtls.get_java_home)
+	java = function(...)
+		local ok, jdtls_java_home = pcall(jdtls.get_java_home, ...)
 
 		if ok then
 			return compatible_path(jdtls_java_home .. "/bin/java")
@@ -15,8 +15,8 @@ local binaries = {
 		return "java"
 	end,
 
-	javac = function()
-		local ok, jdtls_java_home = pcall(jdtls.get_java_home)
+	javac = function(...)
+		local ok, jdtls_java_home = pcall(jdtls.get_java_home, ...)
 
 		if ok then
 			return compatible_path(jdtls_java_home .. "/bin/javac")

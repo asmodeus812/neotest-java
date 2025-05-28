@@ -2,11 +2,12 @@ local log = require("neotest-java.logger")
 local lsp = require("neotest-java.lsp")
 local nio = require("nio")
 
+---@param root_directory string
 ---@param additional_classpath_entries string[]
 ---@return string[]
-local function get_classpaths(additional_classpath_entries)
+local function get_classpaths(root_directory, additional_classpath_entries)
 	additional_classpath_entries = additional_classpath_entries or {}
-	local uri = vim.uri_from_fname(nio.fn.expand("%:p"))
+	local uri = vim.uri_from_fname(root_directory)
 	local bufnr = nio.api.nvim_get_current_buf()
 	local result_classpaths = {}
 

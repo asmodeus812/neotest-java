@@ -106,7 +106,7 @@ local CommandBuilder = {
 		assert(#selectors ~= 0, "junit command has to have a selector")
 
 		local junit_command = {
-			command = java(),
+			command = java(self._basedir),
 			args = {
 				"-jar",
 				self._junit_jar,

@@ -92,9 +92,10 @@ local function gradle_runtime()
 	return get_java_home()
 end
 
-local function extract_runtime()
+---@param root_directory string
+local function extract_runtime(root_directory)
 	local bufnr = nio.api.nvim_get_current_buf()
-	local uri = vim.uri_from_fname(nio.fn.expand("%:p"))
+	local uri = vim.uri_from_fname(root_directory)
 	local err, result, settings = lsp.execute_command("workspace/executeCommand", {
 		command = "java.project.getSettings",
 		arguments = { uri, { COMPILER, LOCATION } },
@@ -144,9 +145,10 @@ local function extract_runtime()
 	return location
 end
 
+---@param root_directory string
 ---@return string | nil
-local function get_runtime()
-	local runtime = extract_runtime()
+local function get_runtime(root_directory)
+	local runtime = extract_runtime(root_directory)
 
 	-- in case the runtime was not found, try to fetch one from the build
 	-- system which the current project is using, match against maven or gradle
